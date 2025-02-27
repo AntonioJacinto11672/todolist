@@ -2,29 +2,37 @@ import { StyleSheet } from "react-native";
 import colors from "../../colors/color";
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  main: {
+    width: "100%",
+    backgroundColor: colors.gray600,
+  },
+  header: {
     backgroundColor: colors.gray700,
-    alignItems: "center",
+    height: 173,
+  },
+  container: {
+    backgroundColor: "red",
   },
   logo: {
+    backgroundColor: colors.gray700,
     alignItems: "center",
-    height: 32,
-    top: 70,
+    margin: 50,
   },
   form: {
-    width: "100%",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.gray400,
+    marginTop: 10,
+    marginLeft: 20,
+    marginRight: 20,
+    gap: 5,
   },
-  input: {
+  content: {
     flex: 1,
-    height: 54,
-    backgroundColor: colors.gray500,
-    top: 142,
-    left: 24,
-    gap: 4,
+    marginTop: 50,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  contentCount: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });

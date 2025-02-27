@@ -4,7 +4,12 @@ import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, Touchable
 import colors from '../../colors/color';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { styles } from './style';
-
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import CountTaskElement from '../../components/CountTaskElement.tsx';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import EmptyTask from '../../components/EmptyTask';
+import Task from '../../components/Task';
 
 export default function Home() {
   const [loaded, error] = useFonts({    
@@ -13,35 +18,44 @@ export default function Home() {
   });
 
   return (
-    <SafeAreaView style={{
-      backgroundColor: colors.gray700,
-      width: '100%',
-    }}>
-     <View style={styles.container}>
+    <>
+      <View style={styles.main}>
+        <View style={styles.header}>
+        <View style={styles.logo}>
+            {/* Logo */}
+              <Image
+              source={
+                require('../../assets/Logo.png')
+              }
+            />
+        </View>
 
-      {/* Logo */}
-      <View style={styles.logo}>
-      <Image
-        source={
-          require('../../assets/Logo.png')
-        }
-      />
+          <View style={styles.form}>
+          
+            <Input />
+
+            <Button />
+
+          </View>
+
+
+        </View>
+
+        <View style={styles.content}>
+          
+          <View style={styles.contentCount}>
+            <CountTaskElement title='Criada' value={0}/>
+            <CountTaskElement  title='Concluídas' value={0}/>
+          </View>
+
+          {/* <EmptyTask /> */}
+
+          <Task />
+
+        </View>
+       
       </View>
-
-      <View style={styles.form}>
-        <TextInput
-        placeholder='Adicione uma nova tarefa'
-        style={styles.input}
-        />
-        <TouchableOpacity>
-          <AntDesign name="pluscircleo" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-    </View>
-
-   
-    </SafeAreaView>
+    </>
   );
 }
 
