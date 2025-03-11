@@ -6,14 +6,12 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { styles } from './style';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import CountTaskElement from '../../components/CountTaskElement.tsx';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import EmptyTask from '../../components/EmptyTask';
 import Task from '../../components/Task';
 import { useState } from 'react';
 
 export default function Home() {
-  const [loaded, error] = useFonts({    
+  const [loaded, error] = useFonts({
     'Inter_regular': require('../../assets/fonts/Inter/static/Inter_18pt-Regular.ttf'),
     'Inter_bold': require('../../assets/fonts/Inter/static/Inter_18pt-Bold.ttf'),
   });
@@ -23,35 +21,43 @@ export default function Home() {
   const [taskDescription, setTaskDescription] = useState<string>('')
   const [count, setCount] = useState<number>(0)
   const [countConcluida, setCountConcluida] = useState<number>(0)
-  
+
 
   /* Adicionar Task */
   const addTask = () => {
-    
 
-      if(tasks.includes(taskDescription)) {
-        return Alert.alert(" Tarefa selhante adicionada, acrescenta ou reduzi algo!")
-      }
 
-      console.log("tasks",tasks)
-      setTasks(prev => [...prev, taskDescription])
-      setTaskDescription('')
-      setCount(count + 1);
+    if (tasks.includes(taskDescription)) {
+      return Alert.alert(" Tarefa semelhante adicionada, acrescenta ou reduzi algo!")
+    }
+
+    //console.log("tasks", tasks)
+    setTasks(prev => [...prev, taskDescription])
+    setTaskDescription('')
+    setCount(count + 1);
   }
 
   /* Remover Task */
-  const handleRemoveTask = (name: string) =>{
-    console.log("Clicou")
-    setTasks(prev => prev.filter(task => task !== name))
-    setCount(count - 1)
-   if(completedTasks.includes(name)){
-    setCountConcluida(countConcluida - 1)
-   }
+  const handleRemoveTask = (name: string) => {
+    //console.log("Clicou")
+    //setTasks(prev => prev.filter(task => task !== name))
+    
 
     Alert.alert("Remover", `Deseja Remover a tarefa ${name}?`, [
       {
         text: 'Sim',
-        onPress: () => setTasks(prev => prev.filter(task => task !== name))
+        onPress: () => {
+          setTasks(prev => prev.filter(task => task !== name))
+          if (count >= 0) {
+            setCount(count - 1)
+          }
+      
+          if (completedTasks.includes(name)) {
+            if (countConcluida >= 0) {
+              setCountConcluida(countConcluida - 1)
+            }
+          }
+        }
       },
       {
         text: 'Não',
@@ -64,7 +70,7 @@ export default function Home() {
   /* Check Task */
 
   const handleCheckTask = (name: string) => {
-    
+
     if (completedTasks.includes(name)) {
       setCompletedTasks(prev => prev.filter(task => task !== name))
       setCountConcluida(countConcluida + 1)
@@ -79,7 +85,7 @@ export default function Home() {
 
 
 
-  
+
 
   const decrement = () => {
     if (count > 0) {
@@ -91,23 +97,23 @@ export default function Home() {
     <>
       <View style={styles.main}>
         <View style={styles.header}>
-        <View style={styles.logo}>
+          <View style={styles.logo}>
             {/* Logo */}
-              <Image
+            <Image
               source={
                 require('../../assets/Logo.png')
               }
             />
-        </View>
+          </View>
 
           <View style={styles.form}>
-          
+
             <Input
               value={taskDescription}
               onchangeText={setTaskDescription}
             />
 
-            <Button onPress={addTask}/>
+            <Button onPress={addTask} />
 
           </View>
 
@@ -115,7 +121,7 @@ export default function Home() {
         </View>
 
         <View style={styles.content}>
-          
+
           <View style={styles.contentCount}>
             <View style={styles.contentCountElement}>
               <Text style={styles.contentCountElementText}> Criadas </Text>
@@ -124,45 +130,36 @@ export default function Home() {
               </TouchableOpacity>
             </View>
             <View style={styles.contentCountElement}>
-              <Text style={styles.contentCountElementText}> Concluídas </Text>
+              <Text style={styles.contentCountElementTextConcluido}> Concluídas </Text>
               <TouchableOpacity style={styles.contentCountElementButton}>
                 <Text style={styles.contentCountElementTextNumber}>{countConcluida}</Text>
               </TouchableOpacity>
             </View>
-            
+
           </View>
-          
 
-          
 
-          {/* { tasks.length > 0 ?
-            tasks.map((task) => {
-              return <Task title={task} />
-            })
-            : <EmptyTask />
-          } */}
+          <FlatList
+            data={tasks}
+            keyExtractor={item => item}
+            showsVerticalScrollIndicator={false}
+            renderItem={(item) =>
 
-          <FlatList 
-          data={tasks}
-          keyExtractor={item => item}
-          showsVerticalScrollIndicator={false}
-          renderItem={(item) => 
+              <Task
+                key={item.item}
+                title={item.item}
+                onRemove={() => handleRemoveTask(item.item)}
+                onChecked={() => handleCheckTask(item.item)}
+                checked={completedTasks.includes(item.item) ? true : false}
+              />
 
-            <Task 
-            key={item.item}
-            title={item.item}
-            onRemove={() => handleRemoveTask(item.item)}
-            onChecked={() => handleCheckTask(item.item)}
-            checked={completedTasks.includes(item.item) ? true : false}
-            />
-
-          }
-          ListEmptyComponent={() => (<EmptyTask />)}
+            }
+            ListEmptyComponent={() => (<EmptyTask />)}
           />
-          
+
 
         </View>
-       
+
       </View>
     </>
   );

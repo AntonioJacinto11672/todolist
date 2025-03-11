@@ -39,7 +39,7 @@ export default function Task( {checked, title, deleted, onChecked, onUnChacked,o
       :
         <TouchableOpacity  onPress={onChecked}>
           {/* Quando não estiver checado */}
-      <FontAwesome name="circle-o" size={24} color={colors.purpleDark}  />
+      <FontAwesome name="circle-o" size={24} color={colors.blue}  />
   </TouchableOpacity>
        }
       

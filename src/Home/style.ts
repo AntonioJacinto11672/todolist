@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   main: {
     width: "100%",
     backgroundColor: colors.gray600,
+    height: "100%"
   },
   header: {
     backgroundColor: colors.gray700,
@@ -41,6 +42,11 @@ export const styles = StyleSheet.create({
   },
   contentCountElementText: {
     color: colors.blue,
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  contentCountElementTextConcluido: {
+    color: colors.purpleDark,
     fontSize: 14,
     fontWeight: "bold",
   },
