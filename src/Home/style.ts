@@ -35,4 +35,25 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  contentCountElement: {
+    flexDirection: "row",
+    gap: 4,
+  },
+  contentCountElementText: {
+    color: colors.blue,
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  contentCountElementButton: {
+    width: 25,
+    height: 19,
+    backgroundColor: colors.gray400,
+    borderRadius: 9,
+    alignItems: "center",
+  },
+  contentCountElementTextNumber: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.gray100,
+  },
 });

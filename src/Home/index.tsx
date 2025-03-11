@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import colors from '../../colors/color';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { styles } from './style';
@@ -10,12 +10,82 @@ import CountTaskElement from '../../components/CountTaskElement.tsx';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import EmptyTask from '../../components/EmptyTask';
 import Task from '../../components/Task';
+import { useState } from 'react';
 
 export default function Home() {
   const [loaded, error] = useFonts({    
     'Inter_regular': require('../../assets/fonts/Inter/static/Inter_18pt-Regular.ttf'),
     'Inter_bold': require('../../assets/fonts/Inter/static/Inter_18pt-Bold.ttf'),
   });
+
+  const [tasks, setTasks] = useState<string[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<string[]>([]);
+  const [taskDescription, setTaskDescription] = useState<string>('')
+  const [count, setCount] = useState<number>(0)
+  const [countConcluida, setCountConcluida] = useState<number>(0)
+  
+
+  /* Adicionar Task */
+  const addTask = () => {
+    
+
+      if(tasks.includes(taskDescription)) {
+        return Alert.alert(" Tarefa selhante adicionada, acrescenta ou reduzi algo!")
+      }
+
+      console.log("tasks",tasks)
+      setTasks(prev => [...prev, taskDescription])
+      setTaskDescription('')
+      setCount(count + 1);
+  }
+
+  /* Remover Task */
+  const handleRemoveTask = (name: string) =>{
+    console.log("Clicou")
+    setTasks(prev => prev.filter(task => task !== name))
+    setCount(count - 1)
+   if(completedTasks.includes(name)){
+    setCountConcluida(countConcluida - 1)
+   }
+
+    Alert.alert("Remover", `Deseja Remover a tarefa ${name}?`, [
+      {
+        text: 'Sim',
+        onPress: () => setTasks(prev => prev.filter(task => task !== name))
+      },
+      {
+        text: 'Não',
+        style: 'cancel'
+      }
+    ])
+  }
+
+
+  /* Check Task */
+
+  const handleCheckTask = (name: string) => {
+    
+    if (completedTasks.includes(name)) {
+      setCompletedTasks(prev => prev.filter(task => task !== name))
+      setCountConcluida(countConcluida + 1)
+    } else {
+      setCompletedTasks(prev => [...prev, name])
+      setCountConcluida(countConcluida + 1)
+    }
+  }
+
+
+  /* Counter */
+
+
+
+  
+
+  const decrement = () => {
+    if (count > 0) {
+      setCount(count - 1);
+    }
+  }
 
   return (
     <>
@@ -32,9 +102,12 @@ export default function Home() {
 
           <View style={styles.form}>
           
-            <Input />
+            <Input
+              value={taskDescription}
+              onchangeText={setTaskDescription}
+            />
 
-            <Button />
+            <Button onPress={addTask}/>
 
           </View>
 
@@ -44,13 +117,49 @@ export default function Home() {
         <View style={styles.content}>
           
           <View style={styles.contentCount}>
-            <CountTaskElement title='Criada' value={0}/>
-            <CountTaskElement  title='Concluídas' value={0}/>
+            <View style={styles.contentCountElement}>
+              <Text style={styles.contentCountElementText}> Criadas </Text>
+              <TouchableOpacity style={styles.contentCountElementButton}>
+                <Text style={styles.contentCountElementTextNumber}>{count}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.contentCountElement}>
+              <Text style={styles.contentCountElementText}> Concluídas </Text>
+              <TouchableOpacity style={styles.contentCountElementButton}>
+                <Text style={styles.contentCountElementTextNumber}>{countConcluida}</Text>
+              </TouchableOpacity>
+            </View>
+            
           </View>
+          
 
-          {/* <EmptyTask /> */}
+          
 
-          <Task />
+          {/* { tasks.length > 0 ?
+            tasks.map((task) => {
+              return <Task title={task} />
+            })
+            : <EmptyTask />
+          } */}
+
+          <FlatList 
+          data={tasks}
+          keyExtractor={item => item}
+          showsVerticalScrollIndicator={false}
+          renderItem={(item) => 
+
+            <Task 
+            key={item.item}
+            title={item.item}
+            onRemove={() => handleRemoveTask(item.item)}
+            onChecked={() => handleCheckTask(item.item)}
+            checked={completedTasks.includes(item.item) ? true : false}
+            />
+
+          }
+          ListEmptyComponent={() => (<EmptyTask />)}
+          />
+          
 
         </View>
        
@@ -58,4 +167,28 @@ export default function Home() {
     </>
   );
 }
+
+const styles2 = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 50,
+  },
+  button: {
+    backgroundColor: '#007bff',
+    padding: 15,
+    borderRadius: 10,
+    marginHorizontal: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  count: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+});
+
 
